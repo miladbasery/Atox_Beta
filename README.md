@@ -1,29 +1,29 @@
-# AtoxComp (Twitter Clone)
+# Atox Beta (Twitter Clone)
 
 A lightweight, high-performance monolithic social media platform and Twitter clone built using native PHP, MySQL, and vanilla frontend technologies. The project supports micro-blogging (tweets), threaded discussions, group interactions, academic pamphlet sharing (Jozves), and community clubs (Kanoons).
 
 ---
 
-## 🚀 Features
+##  Features
 
-### 🌟 Core Social Networking
+### Core Social Networking
 * **Micro-blogging (Tweets):** Create tweets, support for retweets, and interactive nested comments.
 * **Social Graph:** Robust Follow/Unfollow mechanics and user blocking capabilities.
 * **Real-time Metrics:** Tracks views, likes, and engagement metrics natively.
 * **User Profiles & Resumes:** Comprehensive profile customizable settings, including structured JSON skill management and resume attachments.
 
-### 👥 Communities & Groups (Kanoons)
+###  Communities & Groups (Kanoons)
 * **Kanoon Hubs:** Create and manage exclusive associations or student clubs.
 * **Project Showcase:** Link developmental or community projects directly to their respective Kanoon, complete with dedicated image galleries and GitHub integrations.
 * **Jozve Share (Pamphlets):** An academic extension allowing users to upload, categorize, and review educational materials and hand-written notes by term and language.
 
-### 💬 Chat & Infrastructure
+###  Chat & Infrastructure
 * **Direct & Group Messaging:** Persistent chat rooms featuring reply tracking, read receipts, and message edit/delete states.
 * **Security Infrastructure:** Native OTP verification requests, throttled login attempts, and structured user session auditing.
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 * **Backend:** PHP (Native / Procedural & OOP Blend)
 * **Database:** MySQL (Relational schema balancing `InnoDB` for transactional data safety and `MyISAM` for read-heavy entities)
@@ -31,7 +31,7 @@ A lightweight, high-performance monolithic social media platform and Twitter clo
 
 ---
 
-## 📊 Database Architecture
+##  Database Architecture
 
 The system utilizes a relational database management system (`atox_db`) with highly optimized indexing for relational lookups (e.g., social graphs and parent-child tweet structures).
 
@@ -43,7 +43,7 @@ The system utilizes a relational database management system (`atox_db`) with hig
 
 ---
 
-## 💻 Local Installation & Setup
+##  Local Installation & Setup
 
 Follow these steps to deploy and run the application locally on your machine.
 
