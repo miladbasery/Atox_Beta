@@ -1,0 +1,38 @@
+{
+  "id": "/home.php",
+  "name": "آتوکس",
+  "short_name": "آتوکس",
+  "description": "یک شبکه اجتماعی مدرن مبتنی بر وب.",
+  "start_url": "/home.php",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#1DA1F2",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/pwa/icon-192.png?v=2",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "images/pwa/icon-512.png?v=2",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/pwa/screen-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "images/pwa/screen-mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png"
+    }
+  ]
+}

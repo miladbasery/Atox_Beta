@@ -1,0 +1,91 @@
+@import url('https://v1.fontapi.ir/css/Vazir?display=swap');
+
+:root {
+    --primary: #3390ec; --primary-hover: #2b7bc9; --bg-body: #f4f4f5; 
+    --bg-card: #fff; --text-main: #000; --text-muted: #707579; 
+    --border: #e4e4e5; --danger: #e53935;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazir', system-ui, sans-serif; }
+body { background: var(--bg-body); color: var(--text-main); direction: rtl; -webkit-tap-highlight-color: transparent; }
+a { text-decoration: none; color: inherit; }
+button { border: none; background: none; cursor: pointer; color: inherit; }
+input, textarea, button, a { touch-action: manipulation; }
+
+
+.app-layout { display: flex; max-width: 1000px; margin: 0 auto; min-height: 100vh; }
+
+
+.main-content { flex: 1; background: var(--bg-card); min-height: 100vh; border-inline: 1px solid var(--border); padding-bottom: 70px; }
+
+
+.btn { background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 8px; font-weight: bold; text-align: center; display: inline-block; transition: 0.2s; }
+.btn:active { transform: scale(0.98); }
+.btn-small { padding: 6px 12px; font-size: 13px; }
+.btn-block { display: block; width: 100%; }
+
+
+.tweet-card { padding: 15px 20px; border-bottom: 1px solid var(--border); transition: 0.2s; }
+.tweet-card:active { background: #fafafa; }
+.tweet-header, .user-info, .tweet-actions { display: flex; align-items: center; }
+.tweet-header { justify-content: space-between; margin-bottom: 10px; }
+.user-info { gap: 10px; cursor: pointer; }
+.avatar { width: 45px; height: 45px; background: var(--primary); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
+.names strong { display: block; font-size: 15px; }
+.names span { font-size: 13px; color: var(--text-muted); }
+.tweet-text { font-size: 15px; line-height: 1.6; margin-bottom: 12px; white-space: pre-wrap; }
+.tweet-actions { gap: 15px; }
+.action-btn { color: var(--text-muted); padding: 6px 12px; border-radius: 20px; background: #f4f4f5; display: flex; gap: 5px; font-size: 14px; transition: 0.2s; }
+.action-btn:active { background: #e0e0e0; transform: scale(0.95); }
+
+
+.comment-form { display: flex; gap: 10px; margin-top: 15px; }
+.comment-form input, .modal textarea { flex: 1; padding: 10px 15px; border: 1px solid var(--border); border-radius: 20px; outline: none; transition: 0.2s; }
+.comment-form input:focus, .modal textarea:focus { border-color: var(--primary); }
+
+
+.modal { display: none; position: fixed; z-index: 1000; inset: 0; background: rgba(0,0,0,0.4); align-items: center; justify-content: center; }
+.modal-content { background: var(--bg-card); padding: 20px; border-radius: 16px; width: 90%; max-width: 400px; animation: popIn 0.2s ease-out; }
+.modal-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+.close-modal { font-size: 24px; color: var(--text-muted); cursor: pointer; padding: 0 5px; }
+.modal textarea { border-radius: 12px; margin-bottom: 15px; width: 100%; resize: none; }
+
+
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes slideUp { 0% { transform: translateY(100%); } 100% { transform: translateY(0); } }
+
+@media (min-width: 1051px) {
+    .main-content { padding-bottom: 0; border-right: none; }
+}
+
+@media (max-width: 1050px) {
+    .app-layout { background: var(--bg-card); }
+    .main-content { border: none; }
+    .bottom-sheet { position: absolute; bottom: 0; width: 100%; max-width: none; border-radius: 20px 20px 0 0; animation: slideUp 0.3s ease-out; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
+}
+
+
+@media (min-width: 1051px) {
+    .app {
+        max-width: 100% !important;
+        padding: 0 20px !important; 
+        box-sizing: border-box !important;
+    }
+    .main {
+        max-width: 100% !important; 
+        border-radius: 20px !important;
+        border: 1px solid var(--x-border) !important;
+        background: var(--x-bg) !important;
+        margin-bottom: 20px !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.02) !important;
+    }
+    .dark .main {
+        background: rgba(21, 32, 43, 0.85) !important; 
+        border-color: #2f3336 !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+    }
+    
+    .hdr {
+        border-radius: 20px 20px 0 0 !important;
+    }
+}

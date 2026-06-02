@@ -1,0 +1,201 @@
+<?php
+session_start();
+require 'db.php';
+if (!isset($_SESSION['user_id'])) { header('Location: index.php'); exit; }
+
+$current_user_id = $_SESSION['user_id'];
+$profile_id = $_GET['id'] ?? $current_user_id;
+$is_my_profile = ($profile_id == $current_user_id);
+
+$stmt = $pdo->prepare("
+    SELECT u.id, u.name, u.username, u.avatar, u.is_verified,
+           (SELECT COUNT(*) FROM follows WHERE follower_id = ? AND following_id = u.id) as is_followed_by_me
+    FROM follows f
+    JOIN users u ON f.follower_id = u.id
+    WHERE f.following_id = ?
+");
+$stmt->execute([$current_user_id, $profile_id]);
+$users = $stmt->fetchAll();
+
+$blue_tick = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="32"><defs></defs><g transform="translate(12, 12) rotate(0) scale(1, 1) scale(1) translate(-12, -12)" > <path xmlns="http://www.w3.org/2000/svg" d="M22.0199 11.1635C21.8868 10.8973 21.6913 10.6674 21.4499 10.4935L20.1199 9.49346C20.0507 9.44576 20.001 9.37477 19.9798 9.29346C19.95 9.21281 19.95 9.12412 19.9798 9.04346L20.5299 7.41346C20.6182 7.12194 20.6386 6.81411 20.5898 6.51346C20.5437 6.20727 20.4197 5.91806 20.2298 5.67346C20.0469 5.42886 19.8065 5.2331 19.5299 5.10346C19.2653 4.97641 18.973 4.91794 18.6799 4.93346H17.1799C17.0912 4.93238 17.0052 4.90256 16.9349 4.84846C16.8646 4.79437 16.8137 4.71893 16.7899 4.63346L16.3598 3.13346C16.2769 2.82915 16.1187 2.55059 15.8999 2.32346C15.6816 2.10166 15.4144 1.93388 15.1199 1.83346C14.822 1.74208 14.5071 1.72154 14.1999 1.77346C13.8953 1.83295 13.6101 1.96694 13.3699 2.16346L12.2298 3.06346C12.1667 3.12041 12.0849 3.1524 11.9999 3.15346C11.9231 3.16079 11.846 3.14327 11.7799 3.10346L10.6499 2.20346C10.4179 2.01389 10.1433 1.88348 9.84984 1.82346C9.56068 1.75345 9.25899 1.75345 8.96983 1.82346C8.67986 1.90401 8.41284 2.05127 8.18993 2.25346C7.96185 2.47441 7.78738 2.74465 7.67992 3.04346L7.24986 4.55346C7.22803 4.64248 7.17474 4.72062 7.09984 4.77346C7.02078 4.82763 6.92536 4.8524 6.82994 4.84346H5.4099C5.10311 4.83144 4.79789 4.89316 4.51988 5.02346C4.2378 5.14869 3.99317 5.34512 3.80992 5.59346C3.62585 5.8377 3.50248 6.12218 3.44994 6.42346C3.39909 6.71736 3.4196 7.01918 3.50987 7.30346L3.99986 8.99346C4.02462 9.07496 4.02462 9.16197 3.99986 9.24346C3.97459 9.3228 3.92574 9.39255 3.85985 9.44346L2.52989 10.4435C2.28774 10.6235 2.0895 10.8559 1.94994 11.1235C1.81856 11.3893 1.75011 11.6819 1.75011 11.9785C1.75011 12.275 1.81856 12.5676 1.94994 12.8335C2.0895 13.101 2.28774 13.3335 2.52989 13.5135L3.85985 14.5135C3.92574 14.5644 3.97459 14.6341 3.99986 14.7135C4.02462 14.795 4.02462 14.882 3.99986 14.9635L3.44994 16.5935C3.35678 16.8873 3.33275 17.1988 3.37987 17.5035C3.4305 17.8023 3.55415 18.0839 3.73985 18.3235C3.92315 18.5742 4.16765 18.7739 4.44994 18.9035C4.7148 19.0297 5.00687 19.0881 5.29991 19.0735H6.7899C6.88009 19.0696 6.96872 19.0979 7.0399 19.1535C7.11178 19.2029 7.16192 19.2781 7.17992 19.3635L7.60985 20.8735C7.69872 21.1723 7.85633 21.4463 8.06993 21.6735C8.39605 22.0131 8.83718 22.2188 9.30699 22.2502C9.7768 22.2817 10.2414 22.1366 10.6098 21.8435L11.7599 20.9335C11.8292 20.8775 11.9157 20.8469 12.0049 20.8469C12.094 20.8469 12.1805 20.8775 12.2499 20.9335L13.3799 21.8335C13.62 22.0361 13.91 22.1708 14.2198 22.2235C14.333 22.2331 14.4468 22.2331 14.5599 22.2235C14.7568 22.2245 14.9526 22.1941 15.1399 22.1335C15.4367 22.0401 15.7057 21.8742 15.9222 21.6507C16.1388 21.4272 16.296 21.1531 16.3799 20.8535L16.8199 19.3335C16.8379 19.2481 16.8879 19.1729 16.9598 19.1235C17.0372 19.0649 17.1331 19.0365 17.2298 19.0435H18.6599C18.9657 19.0556 19.2702 18.9975 19.5499 18.8735C19.8257 18.7419 20.0659 18.5461 20.2504 18.3025C20.4348 18.0589 20.558 17.7746 20.6098 17.4735C20.6616 17.1657 20.6377 16.8499 20.5399 16.5535L19.9999 14.9335C19.97 14.8528 19.97 14.7641 19.9999 14.6835C20.021 14.6022 20.0707 14.5312 20.1399 14.4835L21.4698 13.4835C21.7116 13.3058 21.9072 13.0726 22.0399 12.8035C22.1796 12.5384 22.2517 12.243 22.2499 11.9435C22.231 11.6698 22.1525 11.4036 22.0199 11.1635ZM16.5799 10.4035L12.1599 14.8235C11.9888 14.991 11.789 15.1265 11.5699 15.2235C11.3478 15.3149 11.11 15.3624 10.8699 15.3635C10.6252 15.3648 10.3831 15.3137 10.1599 15.2135C9.93572 15.1205 9.73191 14.9846 9.55992 14.8135L7.37987 12.6235C7.21604 12.4321 7.1304 12.1861 7.14012 11.9344C7.14984 11.6827 7.25426 11.444 7.43236 11.2659C7.61045 11.0878 7.84914 10.9835 8.10081 10.9737C8.35249 10.964 8.5986 11.0496 8.7899 11.2135L10.8699 13.2935L15.1699 8.98345C15.3573 8.7972 15.6107 8.69266 15.8749 8.69266C16.139 8.69266 16.3926 8.7972 16.5799 8.98345C16.6799 9.07699 16.7595 9.19005 16.8139 9.31562C16.8684 9.44119 16.8965 9.5766 16.8965 9.71346C16.8965 9.85033 16.8684 9.98574 16.8139 10.1113C16.7595 10.2369 16.6799 10.3499 16.5799 10.4435V10.4035Z" fill="#009dff"> </path></g></svg>';
+?>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>دنبال‌کنندگان</title>
+<script>if(localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');</script>
+<style>
+:root { --x-blue:#1d9bf0; --x-black:#0f1419; --x-gray:#536471; --x-border:#eff3f4; --x-bg:#fff; --x-hover:rgba(15,20,25,0.05); }
+.dark { --x-black:#e7e9ea; --x-gray:#71767b; --x-border:#2f3336; --x-bg:#000; --x-hover:rgba(255,255,255,0.05); }
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{background:var(--x-bg);color:var(--x-black);-webkit-tap-highlight-color:transparent;}
+a{text-decoration:none;color:inherit;}
+
+
+.app {display:flex;justify-content:center;min-height:100vh;max-width:1250px;margin:0 auto}
+.main {width:100%;max-width:600px;border-left:1px solid var(--x-border);border-right:1px solid var(--x-border);padding-bottom:100px;}
+
+.hdr {position:sticky; top:0; background:rgba(255,255,255,0.85); backdrop-filter:blur(12px); z-index:10; border-bottom:1px solid var(--x-border); display:flex; align-items:center; padding:10px 16px; gap:20px; transition: 0.3s;}
+.dark .hdr {background:rgba(0,0,0,0.85);}
+.back-btn {display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; transition:0.2s;}
+.back-btn:hover {background:var(--x-hover);}
+.hdr-info h2 {font-size:20px; font-weight:bold; line-height:1.2;}
+
+.u-row {display:flex; align-items:center; padding:12px 16px; border-bottom:1px solid var(--x-border); transition:0.3s; cursor:pointer; position:relative;}
+.u-row:hover {background:var(--x-hover);}
+.u-row.removing {opacity:0; transform:translateX(20px); pointer-events:none;}
+.av {width:48px; height:48px; border-radius:50%; object-fit:cover; margin-left:12px; background:var(--x-border);}
+.info {flex:1; display:flex; flex-direction:column; justify-content:center; overflow:hidden;}
+.name {font-weight:bold; font-size:15px; display:flex; align-items:center; white-space:nowrap; text-overflow:ellipsis;}
+.uname {color:var(--x-gray); font-size:14px; direction:ltr; text-align:right;}
+
+.actions-wrap {display:flex; gap:8px; align-items:center;}
+.btn-follow {background:var(--x-black); color:var(--x-bg); border:none; padding:0 16px; height:32px; border-radius:99px; font-weight:bold; font-size:14px; cursor:pointer; transition:0.2s; min-width:90px;}
+.btn-follow.following {background:transparent; color:var(--x-black); border:1px solid var(--x-border);}
+.btn-follow.following:hover {border-color:#f4212e; color:#f4212e; background:rgba(244,33,46,0.1);}
+.btn-follow.following:hover span {display:none;}
+.btn-follow.following:hover::after {content:"لغو دنبال";}
+.btn-follow:disabled {opacity:0.6; cursor:not-allowed;}
+
+.btn-remove {background:transparent; border:none; color:var(--x-gray); display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; cursor:pointer; transition:0.2s;}
+.btn-remove:hover {background:rgba(244,33,46,0.1); color:#f4212e;}
+
+.empty-state {text-align:center; padding:50px 20px; color:var(--x-gray); font-size:15px; font-weight:bold;}
+
+
+
+
+@media (min-width: 1051px) {
+    .app {
+        max-width: 100%;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+    .main {
+        max-width: 100%; 
+        border-radius: 20px;
+        border: 1px solid var(--x-border);
+        background: var(--x-bg);
+        margin-bottom: 20px;
+        overflow: hidden; 
+        box-shadow: 0 8px 32px rgba(0,0,0,0.02);
+    }
+    .dark .main {
+        background: rgba(21, 32, 43, 0.85); 
+        border-color: #2f3336;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .hdr {
+        border-radius: 20px 20px 0 0; 
+    }
+}
+</style>
+</head>
+<body>
+<?php if(file_exists('header.php')) include 'header.php'; ?>
+
+<div class="app">
+    <div class="main">
+        <div class="hdr">
+            <a href="profile.php?id=<?=$profile_id?>" class="back-btn">
+                <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:currentColor"><path d="M7.414 13l5.043 5.04-1.414 1.42L3.586 12l7.457-7.46 1.414 1.42L7.414 11H21v2H7.414z"/></svg>
+            </a>
+            <div class="hdr-info">
+                <h2>دنبال‌کنندگان</h2>
+            </div>
+        </div>
+
+        <?php if(empty($users)): ?>
+            <div class="empty-state">هیچکس هنوز این کاربر را دنبال نمی‌کند.</div>
+        <?php endif; ?>
+
+        <?php foreach($users as $u): 
+            $av = !empty($u['avatar']) ? $u['avatar'] : "https://ui-avatars.com/api/?name=".urlencode($u['name'])."&background=random&color=fff";
+            $is_me = ($u['id'] == $current_user_id);
+        ?>
+        <div class="u-row" id="row-<?=$u['id']?>" onclick="location.href='profile.php?id=<?=$u['id']?>'">
+            <img src="<?=htmlspecialchars($av)?>" class="av" loading="lazy">
+            <div class="info">
+                <div class="name"><?=htmlspecialchars($u['name'])?> <?=$u['is_verified']?$blue_tick:''?></div>
+                <div class="uname">@<?=htmlspecialchars($u['username'])?></div>
+            </div>
+            
+            <div class="actions-wrap">
+                <?php if($is_my_profile && !$is_me): ?>
+                    <!-- دکمه حذف فالوور (فقط برای پروفایل خود شخص) -->
+                    <button class="btn-remove" title="حذف از دنبال‌کنندگان" onclick="removeFollower(event, <?=$u['id']?>, this)">
+                        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4 11H8v-2h8v2z"/></svg>
+                    </button>
+                <?php endif; ?>
+
+                <?php if(!$is_me): ?>
+                    <!-- دکمه فالو / آنفالو لایو -->
+                    <button 
+                        class="btn-follow <?=$u['is_followed_by_me'] ? 'following' : ''?>" 
+                        onclick="toggleFollow(event, <?=$u['id']?>, this)">
+                        <span><?=$u['is_followed_by_me'] ? 'دنبال می‌کنید' : 'دنبال کردن'?></span>
+                    </button>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+
+<script>
+// تغییر وضعیت فالو/آنفالو به صورت لایو
+function toggleFollow(e, userId, btn) {
+    e.stopPropagation();
+    btn.disabled = true;
+    
+    let fd = new FormData();
+    fd.append('following_id', userId);
+    
+    fetch('actions.php?action=follow', {
+        method: 'POST',
+        body: fd
+    }).then(() => {
+        let isFollowing = btn.classList.contains('following');
+        if (isFollowing) {
+            btn.classList.remove('following');
+            btn.querySelector('span').innerText = 'دنبال کردن';
+        } else {
+            btn.classList.add('following');
+            btn.querySelector('span').innerText = 'دنبال می‌کنید';
+        }
+        btn.disabled = false;
+    }).catch(err => {
+        console.error(err);
+        btn.disabled = false;
+    });
+}
+
+// حذف کاربر از لیست فالوورهای من
+function removeFollower(e, followerId, btn) {
+    e.stopPropagation();
+    if(!confirm('آیا مطمئن هستید که می‌خواهید این کاربر را از دنبال‌کنندگان خود حذف کنید؟')) return;
+
+    btn.disabled = true;
+    
+    let fd = new FormData();
+    fd.append('follower_id', followerId);
+    
+    fetch('actions.php?action=remove_follower', {
+        method: 'POST',
+        body: fd
+    }).then(() => {
+        let row = document.getElementById('row-' + followerId);
+        row.classList.add('removing');
+        setTimeout(() => row.remove(), 300); // حذف نرم از DOM
+    }).catch(err => {
+        console.error(err);
+        btn.disabled = false;
+    });
+}
+</script>
+<?php if(file_exists('footer.php')) include 'footer.php'; ?>
+
+</body>
+</html>
