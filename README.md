@@ -3,7 +3,7 @@
 A lightweight, high-performance monolithic social media platform and Twitter clone built using native PHP, MySQL, and vanilla frontend technologies. The project supports micro-blogging (tweets), threaded discussions, group interactions, academic pamphlet sharing (Jozves), and community clubs (Kanoons).
 
 <p align="center">
-  <img src="images/screenshot.png" alt="Atox Project" width="600">
+  <img src="[images/screenshot.png](https://i.postimg.cc/1XrHgnjm/Picsart-26-06-03-01-13-52-605.jpg)" alt="Atox Project" width="600">
 </p>
 
 ---
